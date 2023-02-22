@@ -3,9 +3,7 @@
     <v-raw>YOUR HAND:</v-raw>
     <v-raw>
         <v-col v-for="card in hand" :key="card">          
-            <v-img
-            :src="getCardImage(card)"
-            />
+            <v-img :src="getCardImage(card)"/>
         </v-col>
     </v-raw>
   </v-container>
@@ -26,9 +24,7 @@
             let s = code[1]
             let n = code[0]
             return `./assets/cards/${this.getPrefix(n)}_of_${this.getSuffix(s)}.svg`
-            
         },
-
         getPrefix: function(n)
         {
             if (n == 'X') return '10'
@@ -38,7 +34,6 @@
             if (n == 'K') return 'king'
             return n
         },
-
         getSuffix: function(n)
         {
             if (n == 'S') return 'spades'
