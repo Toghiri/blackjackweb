@@ -9,6 +9,7 @@
         <v-spacer/>
         <v-btn rounded="pill" color="red" class="ma-2" @click="hit()"> <v-icon>mdi-cards</v-icon> &nbsp;HIT </v-btn>
         <v-btn rounded="pill" color="green" class="ma-2" @click="stand()"> <v-icon>mdi-hand-back-left</v-icon> &nbsp;STAND </v-btn>
+        <v-btn rounded="pill" color="yellow" class="ma-2" @click="reload()"> <v-icon>mdi-reload</v-icon> &nbsp;RESTART </v-btn>
       </v-row>
       <v-row><h1>DEALER CARDS:</h1></v-row>
       <v-row justify="center"><v-col cols="2" v-for="dcard in dealerhand" :key="dcard">          
@@ -69,6 +70,10 @@
         stand: function()
         {
           
+        },
+        reload: function()
+        {
+         this.$router.go() 
         },
         getCardScore: function(card)
         {
