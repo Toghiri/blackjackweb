@@ -1,14 +1,14 @@
 <template>
   <v-container>
       <v-row><h1>YOUR CARDS:</h1></v-row>
-      <v-row><h2>TOT VALUE: {{getHandScore()}} </h2></v-row>
+      <v-row><h2>TOT VALUE: {{getPlayerScore()}} </h2></v-row>
       <v-row justify="center"><v-col cols="2" v-for="card in hand" :key="card">          
         <v-img :src="getCardImage(card)"/></v-col>
       </v-row>
       <v-row>
         <v-spacer/>
-        <v-btn rounded="pill" color="red" class="ma-2" @click="hit()"> <v-icon>mdi-cards</v-icon> &nbsp;HIT </v-btn>
-        <v-btn rounded="pill" color="green" class="ma-2" @click="stand()"> <v-icon>mdi-hand-back-left</v-icon> &nbsp;STAND </v-btn>
+        <v-btn rounded="pill" color="red" class="ma-2" :disabled="!canPlay" @click="hit()"> <v-icon>mdi-cards</v-icon> &nbsp;HIT </v-btn>
+        <v-btn rounded="pill" color="green" class="ma-2" :disabled="!canPlay" @click="stand()"> <v-icon>mdi-hand-back-left</v-icon> &nbsp;STAND </v-btn>
         <v-btn rounded="pill" color="yellow" class="ma-2" @click="reload()"> <v-icon>mdi-reload</v-icon> &nbsp;RESTART </v-btn>
       </v-row>
       <v-row><h1>DEALER CARDS:</h1></v-row>
@@ -34,8 +34,22 @@
     data:() => (
     {
         hand: [generate(), generate()],
-        dealerhand: [generate(), "BB"]
+        dealerhand: ["BB", generate()]
     }),
+
+    computed:
+    {
+      canPlay()
+      {
+        return (this.dealerhand[0] == "BB") && (this.getPlayerScore() > 0)
+      },
+      dealerPlay()
+      {
+        let score = this.getDealerScore()
+        return (!this.canPlay) && (score > 0) && (score < 17) 
+      }
+    },
+
     methods: 
     {
         getCardImage: function(code)
@@ -69,7 +83,10 @@
         },
         stand: function()
         {
-          
+          let dcard = generate()
+          this.dealerhand[0] =  dcard
+          this.dealerhand = this.dealerhand.map(x => x)
+          this.conditionallyPlay()
         },
         reload: function()
         {
@@ -86,21 +103,41 @@
           if (symbol == 'B') return 0
           return symbol.charCodeAt(0) - 48
         },
-        getHandScore: function()
+        getHandScore: function(hand)
         {
           let score = 0
           let hasace = false
-          for (let card of this.hand)
+          for (let card of hand)
           {
             let cardscore = this.getCardScore(card)
             score = score + cardscore
             hasace = hasace || (cardscore == 1)
           }
-          if (score > 21) return "YOU LOST"
+          if (score > 21) return 0
           if (hasace && score <= 11) return score + 10
           return score
         },
-
+        getDealerScore: function()
+        {
+          return this.getHandScore(this.dealerhand)
+        },
+        getPlayerScore: function()
+        {
+          return this.getHandScore(this.hand)
+        },
+        dealerHit: function()
+        {
+          let card = generate()
+          this.dealerhand.push(card)
+          this.conditionallyPlay()
+        },
+        conditionallyPlay: function()
+        {
+          if (this.dealerPlay) 
+          {
+            setTimeout( () => { this.dealerHit() }, 1000)
+          }
+        }
     }
     
   }
