@@ -12,9 +12,17 @@
         <v-btn rounded="pill" color="yellow" class="ma-2" @click="reload()"> <v-icon>mdi-reload</v-icon> &nbsp;RESTART </v-btn>
       </v-row>
       <v-row><h1>DEALER CARDS:</h1></v-row>
+      <v-row><h2>TOT VALUE: {{dealerScore}} </h2></v-row>
       <v-row justify="center"><v-col cols="2" v-for="dcard in dealerhand" :key="dcard">          
         <v-img :src="getCardImage(dcard)"/></v-col>
       </v-row>
+
+      <div class="lost" v-show="lost">
+        <span>
+          YOU LOST
+        </span>
+      </div>
+
   </v-container>
 </template>
 
@@ -47,6 +55,16 @@
       {
         let score = this.getDealerScore()
         return (!this.canPlay) && (score > 0) && (score < 17) 
+      },
+      dealerScore()
+      {
+        if (this.dealerhand[0] != "BB") return this.getDealerScore()
+        else return "?"
+      },
+      lost()
+      {
+        if ((this.getPlayerScore() == 0) || (this.getDealerScore() > this.getPlayerScore())) return true
+        else return false
       }
     },
 
@@ -142,3 +160,23 @@
     
   }
 </script>
+
+<style scoped>
+
+  .lost
+  {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: red;
+  } 
+
+  .won
+  {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: green;
+  } 
+
+</style>
