@@ -37,8 +37,11 @@
 </template>
 
 <script>
-
+  import Axios from "axios";
+  
   function generate() {
+    Axios.get('api/random-number')
+      .then(x => console.log(x))
     let n = Math.floor(Math.random() * 13)
     let m = Math.floor(Math.random() * 4)
     let symbols = "A23456789XJQK"
