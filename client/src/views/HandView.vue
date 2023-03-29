@@ -17,9 +17,19 @@
         <v-img :src="getCardImage(dcard)"/></v-col>
       </v-row>
 
-      <div class="lost" v-show="lost">
-        <span>
+      <div class="container" v-show="lost">
+        <span class="center lost">
           YOU LOST
+        </span>
+      </div>
+        <div class="container" v-show="won">
+        <span class="center won">
+          YOU WON
+        </span>
+      </div>
+      <div class="container" v-show="tie">
+        <span class="center tie">
+          TIE
         </span>
       </div>
 
@@ -61,10 +71,22 @@
         if (this.dealerhand[0] != "BB") return this.getDealerScore()
         else return "?"
       },
+      gameover()
+      {
+        let score = this.getDealerScore()
+        return (this.dealerhand[0] != "BB") && ((score == 0) || (score >= 17))
+      },
       lost()
       {
-        if ((this.getPlayerScore() == 0) || (this.getDealerScore() > this.getPlayerScore())) return true
-        else return false
+        return this.gameover && (this.getPlayerScore() < this.getDealerScore())
+      },
+      won()
+      {
+        return this.gameover && (this.getPlayerScore() > this.getDealerScore())
+      },
+      tie()
+      {
+        return this.gameover && (this.getPlayerScore() == this.getDealerScore())
       }
     },
 
@@ -163,20 +185,46 @@
 
 <style scoped>
 
+.container 
+  {
+    position: relative;
+  }
+
+  .center {
+    position: fixed;
+    top: 40%;
+    left: 35%;
+    text-align: center;
+    font-size: 18px;
+  }
   .lost
   {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+    width: 30vw;
+    height: 30vh;
     background-color: red;
+    border: 2px solid black;
+    padding: 5px;
+    margin: 15px;
   } 
 
   .won
   {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+    width: 30vw;
+    height: 30vh;
     background-color: green;
+    border: 2px solid black;
+    padding: 5px;
+    margin: 15px;
+  } 
+
+  .tie
+  {
+    width: 30vw;
+    height: 30vh;
+    background-color: gold;
+    border: 2px solid black;
+    padding: 5px;
+    margin: 15px;
   } 
 
 </style>
