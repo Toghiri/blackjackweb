@@ -38,12 +38,13 @@
 
 <script>
   import Axios from "axios";
-  
-  function generate() {
-    Axios.get('api/random-number')
-      .then(x => console.log(x))
-    let n = Math.floor(Math.random() * 13)
-    let m = Math.floor(Math.random() * 4)
+
+  async function generate() {
+    let response = await Axios.get('api/random-number')
+    let k = response.data % 56
+    console.log(response) 
+    let n = k % 13
+    let m = k % 4
     let symbols = "A23456789XJQK"
     let seeds = "SHDC"
     let card = `${symbols[n]}${seeds[m]}`
@@ -52,10 +53,10 @@
 
   export default {
     name: 'HandView',
-    data:() => (
+    data: () => (
     {
-        hand: [generate(), generate()],
-        dealerhand: ["BB", generate()]
+        hand: [],
+        dealerhand: []
     }),
 
     computed:
@@ -119,14 +120,14 @@
             if (n == 'C') return 'clubs'
             if (n == 'B') return 'blank'
         },
-        hit: function()
+        hit: async function()
         {
-          let card = generate()
+          let card = await generate()
           this.hand.push(card)
         },
-        stand: function()
+        stand: async function()
         {
-          let dcard = generate()
+          let dcard = await generate()
           this.dealerhand[0] =  dcard
           this.dealerhand = this.dealerhand.map(x => x)
           this.conditionallyPlay()
@@ -168,9 +169,9 @@
         {
           return this.getHandScore(this.hand)
         },
-        dealerHit: function()
+        dealerHit: async function()
         {
-          let card = generate()
+          let card = await generate()
           this.dealerhand.push(card)
           this.conditionallyPlay()
         },
@@ -181,8 +182,12 @@
             setTimeout( () => { this.dealerHit() }, 1000)
           }
         }
+    },
+    async created()
+    {
+      this.hand = [ await generate(), await generate()]
+      this.dealerhand = ["BB", await generate()]
     }
-    
   }
 </script>
 
