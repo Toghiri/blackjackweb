@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
-namespace server.Controllers
+namespace Blackjack.Controllers
 {
     [Route("api/random-number")]
     public class RNGController : ControllerBase

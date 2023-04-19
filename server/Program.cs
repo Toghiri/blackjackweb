@@ -1,9 +1,12 @@
+using Blackjack.Database;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // builder.Services.AddRazorPages
 builder.Services.AddMvc(option => option.EnableEndpointRouting = false);
 builder.Services.AddControllers();
+builder.Services.AddSingleton<DbContextFactory>();
 
 var app = builder.Build();
 
